@@ -82,6 +82,11 @@ const updateOrder = async function(req, res){
 
         if (!validation.isValidObjectId(orderId)) return res.status(400).send({ status: false, message: "Order Id is not valid" })
 
+        // Authentication
+        let tokenId = req.userId
+        // console.log(tokenId)
+        if (tokenId != userId) return res.status(401).send({ status: false, message: "Unauthorised Access" })
+
         let findUser = await userModel.findOne({ _id: userId })
         if (findUser == null) return res.status(404).send({ status: false, message: "User is not found" })
 
@@ -116,9 +121,6 @@ const updateOrder = async function(req, res){
         return res.status(500).send({ status: false, msg: err.message })
     }
 }
-
-
-
 
 
 
