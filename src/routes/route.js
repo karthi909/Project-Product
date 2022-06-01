@@ -43,6 +43,16 @@ router.post("/users/:userId/orders",  orderController.createOrder)
 
 
 
+router.post("/users/:userId/orders", middleware.authorizatoion, orderController.createOrder)
+
+router.put("/users/:userId/orders", /* middleware.authorizatoion, */ orderController.updateOrder)
+
+
+
+
+
+
+
 
 
 module.exports = router
