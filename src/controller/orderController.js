@@ -1,16 +1,16 @@
 const orderModel = require('../models/orderModel')
 const cartModel = require("../models/cartModel")
 const userModel = require("../models/userModel")
-// const productModel = require("../models/productModel")
 const validation = require('../validations/validation')
-const { findOne } = require('../models/orderModel')
+
 
 const createOrder = async function (req, res) {
     try {
         let data = req.body
         let userId = req.params.userId
+        //console.log(userId)
         let { cartId, cancellable, status } = data
-
+        
         if (!validation.isValidRequestBody(data)) return res.status(400).send({ status: false, message: "No data found" })
 
         if (!validation.isValidObjectId(userId)) return res.status(400).send({ status: false, message: "User Id is not valid" })
@@ -19,7 +19,8 @@ const createOrder = async function (req, res) {
 
         // Authentication
         let tokenId = req.userId
-        // console.log(tokenId)
+
+        console.log("2", tokenId)
         if (tokenId != userId) return res.status(401).send({ status: false, message: "Unauthorised Access" })
 
         let findUser = await userModel.findOne({ _id: userId })
