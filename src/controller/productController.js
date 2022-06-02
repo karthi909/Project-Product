@@ -23,6 +23,9 @@ const createProduct = async function (req, res) {
 
         if (price <= 0) return res.status(400).send({ status: false, msg: "Price have to be more than Rupees O [Zero]" })
 
+        let Pattern = /^[0-9]+\.?[0-9]+$/;
+        if (!(Pattern.test(price))) return res.status(400).send({ status: false, msg: "Not a valid price, enter number only" })
+
         if (currencyId != "INR") return res.status(400).send({ status: false, msg: "CurrencyId should be only in INR" })
 
         if (currencyFormat != "₹") return res.status(400).send({ status: false, msg: "Currency Format should be only ₹" })
@@ -40,15 +43,16 @@ const createProduct = async function (req, res) {
         }
 
         let files = req.files
+        // console.log(files)
         if (files && files.length == 0) {
-            return res.status(400).send({ msg: "No file found" })
+            return res.status(400).send({ msg: "No file to upload" })
         }
 
 
         let productPicture = await aws.uploadFile(files[0])
 
         if (isFreeShipping) {
-
+            isFreeShipping.trim()
             if (!((isFreeShipping === "true") || (isFreeShipping === "false"))) {
                 return res.status(400).send({ status: false, message: 'isFreeShipping should be true or false' })
             }
@@ -56,17 +60,16 @@ const createProduct = async function (req, res) {
         let productRegister = { title, description, price, currencyId, currencyFormat, productImage: productPicture, isFreeShipping, style, availableSizes, installments }
 
 
-        if (availableSizes) {
-            let array = availableSizes.split(",").map(x => x.trim()) //this will split the available sizes and give it an array
+        if (!validation.isValid(availableSizes)) return res.status(400).send({ status: false, msg: "availableSizes feild is requried" })
+        let array = availableSizes.split(",").map(x => x.trim()) //this will split the available sizes and give it an array
 
-            for (let i = 0; i < array.length; i++) {
-                if (!(["S", "XS", "M", "X", "L", "XXL", "XL"].includes(array[i]))) {
-                    return res.status(400).send({ status: false, msg: `Available sizes must be among ${["S", "XS", "M", "X", "L", "XXL", "XL"].join(',')}` })
-                }
+        for (let i = 0; i < array.length; i++) {
+            if (!(["S", "XS", "M", "X", "L", "XXL", "XL"].includes(array[i]))) {
+                return res.status(400).send({ status: false, msg: `Available sizes must be among ${["S", "XS", "M", "X", "L", "XXL", "XL"].join(',')}` })
             }
-            if (Array.isArray(array)) {
-                productRegister['availableSizes'] = array
-           }
+        }
+        if (Array.isArray(array)) {
+            productRegister['availableSizes'] = array
         }
 
         const createProduct = await productModel.create(productRegister)
@@ -181,7 +184,7 @@ const deletedProduct = async function (req, res) {
 
 // const updateProduct = async function (req, res) {
 //     let data = req.body 
-    
+
 // }
 
 
