@@ -19,14 +19,15 @@ const createOrder = async function (req, res) {
 
         if(!validation.isValid(cartId)) return res.status(400).send({ status: false, message: "Cart Id is required" })
 
-        // Authentication
-        let tokenId = req.userId
-
-        console.log("2", tokenId)
-        if (tokenId != userId) return res.status(401).send({ status: false, message: "Unauthorised Access" })
-
         let findUser = await userModel.findOne({ _id: userId })
         if (findUser == null) return res.status(404).send({ status: false, message: "User not found" })
+
+        // Authentication
+        let tokenId = req.userId
+        // console.log("2", tokenId)
+        if (tokenId != userId) return res.status(401).send({ status: false, message: "Unauthorised Access" })
+
+        
 
         let findCart = await cartModel.findOne({ _id: cartId })
         if (findCart == null) return res.status(404).send({ status: false, message: "Cart not found" })

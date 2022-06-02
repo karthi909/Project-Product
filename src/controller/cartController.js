@@ -15,9 +15,14 @@ const createCart = async function (req, res) {
 
         if (!validation.isValidObjectId(userID)) return res.send({ msg: "Not a valid UserID" })
 
-        let tokenId = req.userId
+        let userExist = await userModel.findOne({ _id: userID });
+        if (!userExist) {
+            return res.status(404).send({ status: false, message: `No user found with this ${userID}` })
+        }
 
-        console.log(tokenId)
+
+        let tokenId = req.userId
+        // console.log(tokenId)
         if (tokenId != userID) return res.status(401).send({ status: false, message: "Unauthorised Access" })
 
         if (!cartId) {
@@ -42,23 +47,14 @@ const createCart = async function (req, res) {
         if (req.body.quantity) return res.status(400).send({ status: false, msg: "Dont give qnt" })
 
 
-        //if (Object.keys userID) == 0) { return res.status(400).send({ status: false, message: "Please provide User Id " }) }
-
-
-        let userExist = await userModel.findOne({ _id: userID });
-        if (!userExist) {
-            return res.status(404).send({ status: false, message: `No user found with this $ userID}` })
-        }
-
-
         let cartExist = await cartModel.findOne({ _id: cartId });
 
 
 
         if (cartExist) {
 
-            if (cartExist.userId != userID) {
-                return res.status(403).send({ status: false, message: "This cart does not belong to you. Please check the cart Id" })
+            if (cartExist.userId.toString() != userID) {
+                return res.status(403).send({ status: false, message: "This cart does not belong to user. Please check the cart Id" })
             }
             let updateData = {}
 
@@ -70,6 +66,7 @@ const createCart = async function (req, res) {
                 updateData["items"] = arr;
 
                 const productPrice = await productModel.findOne({ _id: productID, isDeleted: false }).select({ price: 1, _id: 0 })
+                // console.log(productPrice)
 
                 if (!productPrice) { return res.status(404).send({ status: false, mesaage: `No product found with this ${productID}` }) }
 
@@ -191,7 +188,6 @@ const deleteCartProducts = async function (req, res) {
         if (findCart === null) return res.status(404).send({ status: false, message: "Cart is not found" })
 
 
-
         let updateCartData = await cartModel.findOneAndUpdate({ userId: userId }, { $set: { items: [], totalPrice: 0, totalItems: 0 } }, { new: true })
 
         return res.status(204).send({ status: true, message: "Cart data cleared successfully", data: updateCartData })
@@ -209,6 +205,11 @@ const updateCart = async function (req, res) {
 
         if (!validation.isValidObjectId(userId)) {
             return res.status(400).send({ status: false, msg: "userId is not a valid objectId" })
+        }
+
+        const userDetails = await userModel.findOne({ _id: userId })
+        if (!userDetails) {
+            return res.status(404).send({ status: false, msg: "user not exist with this userId" })
         }
 
         // Authentication
@@ -239,10 +240,8 @@ const updateCart = async function (req, res) {
             return res.status(400).send({ status: false, msg: "removeProduct value should be either 0 or 1" })
         }
 
-        const userDetails = await userModel.findOne({ _id: userId })
-        if (!userDetails) {
-            return res.status(404).send({ status: false, msg: "user not exist with this userId" })
-        }
+        
+
         const productDetails = await productModel.findOne({ _id: productId, isDeleted: false })
         if (!productDetails) {
             return res.status(404).send({ status: false, msg: "product not exist or deleted" })

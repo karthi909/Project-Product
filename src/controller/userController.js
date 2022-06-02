@@ -7,7 +7,7 @@ const aws = require("./aws")
 //const { json } = require("express/lib/response")
 
 const createUser = async function (req, res) {
-   // try {
+    try {
         let data = req.body;
         let { fname, lname, email, password, phone, address } = data
         let files = req.files
@@ -17,8 +17,6 @@ const createUser = async function (req, res) {
         if (!validation.isValid(fname)) return res.status(400).send({ status: false, message: "first name is required or not valid" })
 
         if (!validation.isValid(lname)) return res.status(400).send({ status: false, message: "last name is required or not valid" })
-
-
 
 
 
@@ -32,13 +30,9 @@ const createUser = async function (req, res) {
 
 
 
-
-
-
         if (!validation.isValid(password)) return res.status(400).send({ status: false, message: "Pasworrd is required or not valid" })
 
         if (!validation.isValidPassword(password)) return res.status(400).send({ status: false, message: "Password length should be 8 to 15 digits and enter atleast one uppercase or lowercase" })
-
 
 
 
@@ -51,9 +45,9 @@ const createUser = async function (req, res) {
         if (checkPhone) return res.status(409).send({ status: false, msg: "Phone already exist" })
 
 
-        if(!address) return res.status(400).send({status: false, msg:"address requried"})
+        if (!address) return res.status(400).send({ status: false, msg: "address requried" })
         var addresss = JSON.parse(address)
-        
+
 
         if (!validation.isValid(addresss.shipping.street)) return res.status(400).send({ status: false, message: "street field is required or not valid" })
 
@@ -74,14 +68,13 @@ const createUser = async function (req, res) {
 
         if (!validation.isValidPincode(addresss.billing.pincode)) return res.status(400).send({ status: false, message: "PIN code should contain 6 digits only " })
 
-        
 
 
         if (files && files.length == 0) {
             //upload to s3 and get the uploaded link
             // res.send the link back to frontend/postman
 
-           return res.status(400).send({ msg: "No file found" })
+            return res.status(400).send({ msg: "No file found" })
         }
         let uploadedFileURL = await aws.uploadFile(files[0])
 
@@ -95,11 +88,11 @@ const createUser = async function (req, res) {
         let createUser = await userModel.create(data)
         return res.status(201).send({ status: true, message: "user created successfully", createUser })
 
-    //}
-    // catch (err) {
-    //     console.log("This is the error :", err.message)
-    //     res.status(500).send({ msg: "Error", error: err.message })
-    // }
+    }
+    catch (err) {
+        console.log("This is the error :", err.message)
+        res.status(500).send({ msg: "Error", error: err.message })
+    }
 }
 
 
