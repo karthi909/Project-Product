@@ -17,6 +17,8 @@ const createOrder = async function (req, res) {
 
         if (!validation.isValidObjectId(cartId)) return res.status(400).send({ status: false, message: "Cart Id is not valid" })
 
+        if(!validation.isValid(cartId)) return res.status(400).send({ status: false, message: "Cart Id is required" })
+
         // Authentication
         let tokenId = req.userId
 
@@ -81,7 +83,11 @@ const updateOrder = async function(req, res){
 
         if (!validation.isValidObjectId(userId)) return res.status(400).send({ status: false, message: "User Id is not valid" })
 
+        if(!validation.isValid(orderId)) return res.status(400).send({ status: false, message: "Order Id required" })
+
         if (!validation.isValidObjectId(orderId)) return res.status(400).send({ status: false, message: "Order Id is not valid" })
+
+        if(!validation.isValid(status)) return res.status(400).send({ status: false, message: "Status is required for updatation" })
 
         // Authentication
         let tokenId = req.userId
@@ -122,7 +128,6 @@ const updateOrder = async function(req, res){
         return res.status(500).send({ status: false, msg: err.message })
     }
 }
-
 
 
 
