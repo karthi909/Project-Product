@@ -15,9 +15,9 @@ const createCart = async function (req, res) {
 
         if (!validation.isValidObjectId(userID)) return res.send({ msg: "Not a valid UserID" })
 
-        // Authentication
         let tokenId = req.userId
-        // console.log(tokenId)
+
+        console.log(tokenId)
         if (tokenId != userID) return res.status(401).send({ status: false, message: "Unauthorised Access" })
 
         if (!cartId) {

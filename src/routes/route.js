@@ -11,9 +11,9 @@ router.post('/register',userController.createUser)
 
 router.post('/login', userController.loginUser)
 
-router.get('/user/:userId/profile', middleware.authorizatoion ,userController.getUserList)
+router.get('/user/:userId/profile', middleware.authorization ,userController.getUserList)
 
-router.put('/user/:userId/profile', middleware.authorizatoion ,userController.updateUserList)
+router.put('/user/:userId/profile', middleware.authorization ,userController.updateUserList)
 
 
 
@@ -29,23 +29,21 @@ router.put('/products/:productId' ,productController.updateProduct)
 
 
 
-router.post("/users/:userId/cart", middleware.authorizatoion, cartController.createCart)
+router.post("/users/:userId/cart", middleware.authorization, cartController.createCart)
 
-router.get("/users/:userId/cart", middleware.authorizatoion, cartController.getCartData)
+router.get("/users/:userId/cart", middleware.authorization, cartController.getCartData)
 
-router.delete("/users/:userId/cart", middleware.authorizatoion, cartController.deleteCartProducts)
+router.delete("/users/:userId/cart", middleware.authorization, cartController.deleteCartProducts)
 
-router.put("/users/:userId/cart", middleware.authorizatoion, cartController.updateCart)
-
-
-router.post("/users/:userId/orders",  orderController.createOrder)
+router.put("/users/:userId/cart", middleware.authorization, cartController.updateCart)
 
 
 
 
-router.post("/users/:userId/orders", middleware.authorizatoion, orderController.createOrder)
 
-router.put("/users/:userId/orders", middleware.authorizatoion, orderController.updateOrder)
+router.post("/users/:userId/orders", middleware.authorization, orderController.createOrder)
+
+router.put("/users/:userId/orders", middleware.authorization, orderController.updateOrder)
 
 
 
