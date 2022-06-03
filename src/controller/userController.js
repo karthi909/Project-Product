@@ -327,7 +327,7 @@ const updateUserList = async (req, res) => {
         //check it once.........................................................................................
         if (!validation.isValidRequestBody(updatedData)) { return res.status(400).send({ status: false, msg: "give some body for update" }) }
 
-        const updated = await userModel.findOneAndUpdate({ _id: userId }, updatedData)
+        const updated = await userModel.findOneAndUpdate({ _id: userId }, updatedData, { new: true })
 
         return res.status(201).send({ status: true, data: updated })
     } catch (err) {

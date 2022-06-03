@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken")
 
 const authorization = async function (req, res, next) {
   try {
-    const token = req.header('Authorization') //setting token in the request header.
+    const token = req.header['Authorization'] //setting token in the request header.
 
     if (!token) {
       return res.status(403).send({ status: false, message: `Missing authentication token in request` })
