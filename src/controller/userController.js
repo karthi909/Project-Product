@@ -314,7 +314,7 @@ const updateUserList = async (req, res) => {
         }
 
         if (files && files.length > 0) {
-            console.log(files)
+            //console.log(files)
 
             let uploadedFileURL = await aws.uploadFile(files[0]);
             if (uploadedFileURL) {
@@ -326,6 +326,7 @@ const updateUserList = async (req, res) => {
 
         //check it once.........................................................................................
         if (!validation.isValidRequestBody(updatedData)) { return res.status(400).send({ status: false, msg: "give some body for update" }) }
+        console.log(updatedData)
 
         const updated = await userModel.findOneAndUpdate({ _id: userId }, updatedData)
 

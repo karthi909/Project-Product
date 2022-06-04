@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken")
 
 const authorization = async function (req, res, next) {
   try {
-    const token = req.header('Authorization') //setting token in the request header.
+    const token = req.header['Authorization'] //setting token in the request header.
 
     if (!token) {
       return res.status(403).send({ status: false, message: `Missing authentication token in request` })
@@ -38,6 +38,3 @@ module.exports.authorization = authorization;
 
 
 
-// if (!(userId.toString() == tokenId.toString())) {
-//   return res.status(401).send({ status: false, message: `Unauthorized access! Owner info doesn't match` });
-// }

@@ -189,7 +189,7 @@ const deletedProduct = async function (req, res) {
 // }
 
 
-const updateProduct = async function (req, res) {
+const updateProduct = async function (req, res) {  //function expressionn
     try {
         const body = req.body
 
