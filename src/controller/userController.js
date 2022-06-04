@@ -138,7 +138,9 @@ const getUserList = async (req, res) => {
         let userId = req.params.userId
         // console.log(userId)
         let tokenId = req.userId
-        //console.log(tokenId)
+        console.log(tokenId)
+        if (!(userId == tokenId)) return res.status(401).send({ status: false, message: `Unauthorized access! Owner info doesn't match` });
+
 
         if ((!validation.isValidObjectId(userId) || !validation.isValidObjectId(tokenId))) return res.status(400).send({ status: false, message: "userId or tokenid is not valid" });;
 
